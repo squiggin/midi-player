@@ -1,6 +1,5 @@
 package piano;
 
-import javax.sound.midi.InvalidMidiDataException;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
@@ -18,25 +17,53 @@ public class AudioManager {
             sequencer = MidiSystem.getSequencer();
             sequencer.open();
             sequence = new Sequence(Sequence.PPQ, 4);
+            sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public void addNote(int noteNumber, int tick) {
+    public MidiEvent[] addNote(int noteNumber, int tick) {
         MidiEvent event1 = null;
         MidiEvent event2 = null;
         try {
             ShortMessage message = new ShortMessage(144, 1, noteNumber, 90);
             event1 = new MidiEvent(message, tick);
             message = new ShortMessage(128, 1, noteNumber, 90);
-            event2 = new MidiEvent(message, tick+4);
+            event2 = new MidiEvent(message, tick + 4);
         } catch (Exception e) {
             e.printStackTrace();
         }
         track.add(event1);
         track.add(event2);
+        return new MidiEvent[] {event1, event2};
+    }
+
+    public void removeNote(MidiEvent[] event) {
+        System.out.println(track.remove(event[0]));
+        System.out.println(track.remove(event[1]));
+    }
+
+    public void startPlaying() {
+        float tempo = sequencer.getTempoInBPM();
+        try {
+            sequencer.setSequence(sequence);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        sequencer.setTempoInBPM(tempo);
+        sequencer.start();
+    }
+
+    public void stopPlaying() {
+        sequencer.stop();
+    }
+
+    public void reset() {
+        this.stopPlaying();
+        this.sequencer.setTickPosition(0);
+        this.sequencer.start();
     }
 
     public static void main(String[] args) {
@@ -47,7 +74,7 @@ public class AudioManager {
         a.addNote(63, 12);
         try {
             a.sequencer.setSequence(a.sequence);
-        } catch (InvalidMidiDataException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         a.sequencer.setTempoInBPM(120);
@@ -57,7 +84,7 @@ public class AudioManager {
             // Exit the program when sequencer has stopped playing. 
             if (!a.sequencer.isRunning()) { 
                 a.sequencer.close(); 
-                return; 
+                break; 
             } 
         }
     }

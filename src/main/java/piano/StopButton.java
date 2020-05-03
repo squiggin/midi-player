@@ -12,13 +12,10 @@ public class StopButton implements Drawable {
         this.img = img;
     }
 
-    private void stop(Pointer pointer, PlayButton playButton) {
+    public void tick(Pointer pointer, PlayButton playButton, AudioManager audioTrack) {
         pointer.stop();
-        playButton.stop();
-    }
-
-    public void tick(Pointer pointer, PlayButton playButton) {
-        this.stop(pointer, playButton);
+        audioTrack.reset();
+        playButton.stop(audioTrack);
     }
 
     public void render(PApplet app) {

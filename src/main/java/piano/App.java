@@ -9,11 +9,13 @@ public class App extends PApplet {
     private StopButton stop;
     private Pointer point;
     private Grid grid;
+    private AudioManager audioTrack;
 
     PImage[] images;
 
     public App() {
         // Initialise variables here
+        audioTrack = new AudioManager();
     }
 
     public void settings() {
@@ -48,15 +50,15 @@ public class App extends PApplet {
             this.mouseX <= PlayButton.X_COORD + 40 &&
             this.mouseY >= PlayButton.Y_COORD &&
             this.mouseY <= PlayButton.Y_COORD + 40) {
-            play.tick(this.point);
+            play.tick(this.point, this.audioTrack);
         } else if(this.mouseX >= StopButton.X_COORD &&
                 this.mouseX <= StopButton.X_COORD + 40 &&
                 this.mouseY >= StopButton.Y_COORD &&
                 this.mouseY <= StopButton.Y_COORD + 40) {
-            stop.tick(this.point, this.play);
+            stop.tick(this.point, this.play, this.audioTrack);
         } else if(this.mouseX >= Grid.X_COORD &&
                 this.mouseY >= Grid.Y_COORD) {
-            grid.tick(mouseX, mouseY);
+            grid.tick(this.mouseX, this.mouseY, this.audioTrack);
         }
     }
 
@@ -68,6 +70,7 @@ public class App extends PApplet {
         this.image(this.images[Asset.Banner.get()], 0, 0);
         stop.render(this);
         play.render(this);
+        point.tick(this, this.audioTrack);
         point.render(this);
     }
 

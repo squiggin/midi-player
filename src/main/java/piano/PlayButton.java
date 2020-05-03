@@ -14,17 +14,23 @@ public class PlayButton implements Drawable {
         play = false;
     }
 
-    private void togglePlay(Pointer pointer) {
+    private void togglePlay(Pointer pointer, AudioManager audioTrack) {
         pointer.togglePlay();
         play = !play;
+        if(play) {
+            audioTrack.startPlaying();
+        } else {
+            audioTrack.stopPlaying();
+        }
     }
 
-    public void stop() {
+    public void stop(AudioManager audioTrack) {
         play = false;
+        audioTrack.stopPlaying();
     }
 
-    public void tick(Pointer pointer) {
-        this.togglePlay(pointer);
+    public void tick(Pointer pointer, AudioManager audioTrack) {
+        this.togglePlay(pointer, audioTrack);
     }
 
     public void render(PApplet app) {
