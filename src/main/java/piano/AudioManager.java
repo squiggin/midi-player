@@ -11,6 +11,7 @@ public class AudioManager {
     private Sequencer sequencer;
     private Sequence sequence;
     private Track track;
+    private boolean isPlaying;
 
     public AudioManager() {
         try {
@@ -19,12 +20,15 @@ public class AudioManager {
             sequence = new Sequence(Sequence.PPQ, 4);
             sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
+            sequencer.setSequence(sequence);
+            isPlaying = false;
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     public MidiEvent[] addNote(int noteNumber, int tick) {
+        System.out.println(isPlaying);
         MidiEvent event1 = null;
         MidiEvent event2 = null;
         try {
@@ -41,8 +45,8 @@ public class AudioManager {
     }
 
     public void removeNote(MidiEvent[] event) {
-        System.out.println(track.remove(event[0]));
-        System.out.println(track.remove(event[1]));
+        track.remove(event[0]);
+        track.remove(event[1]);
     }
 
     public void startPlaying() {
@@ -54,10 +58,12 @@ public class AudioManager {
         }
         sequencer.setTempoInBPM(tempo);
         sequencer.start();
+        isPlaying = true;
     }
 
     public void stopPlaying() {
         sequencer.stop();
+        isPlaying = false;
     }
 
     public void reset() {
@@ -88,4 +94,9 @@ public class AudioManager {
             } 
         }
     }
+
+    public Sequence getSequence() {
+        return sequence;
+    }
+
 }
