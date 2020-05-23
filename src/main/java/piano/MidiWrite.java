@@ -10,8 +10,8 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 
 public class MidiWrite implements Drawable {
-    final static int X_COORD = 100;
-    final static int Y_COORD = 5;
+    final int X_COORD = 100;
+    final int Y_COORD = 5;
     private AudioManager audioTrack;
 
     public MidiWrite(AudioManager audioTrack) {
