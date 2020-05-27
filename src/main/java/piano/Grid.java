@@ -10,17 +10,24 @@ import processing.core.PImage;
 public class Grid implements Drawable {
     private PImage img;
     private PImage blockImg;
-    private HashMap<Integer, HashMap<Integer, Block>> blocks;
-    final static int X_COORD = 60;
-    final static int Y_COORD = 75;
+    private AudioManager audioTrack;
+    HashMap<Integer, HashMap<Integer, Block>> blocks;
+    final int X_COORD = 60;
+    final int Y_COORD = 75;
 
-    public Grid(PImage img, PImage blockImg) {
+    public Grid(PImage img, PImage blockImg, AudioManager audioTrack) {
         this.img = img;
         this.blockImg = blockImg;
+        this.audioTrack = audioTrack;
+        this.audioTrack.setGrid(this);
         blocks = new HashMap<Integer, HashMap<Integer, Block>>();
     }
 
-    public void tick(int clickX, int clickY, AudioManager audioTrack) {
+    void clear() {
+        blocks = new HashMap<Integer, HashMap<Integer, Block>>();
+    }
+
+    public void tick(int clickX, int clickY) {
 
         Integer[] blockKey = new Integer[] {(clickX - 60)/15, (clickY - 75)/20};
         if(blocks.containsKey(blockKey[0])) {

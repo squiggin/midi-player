@@ -9,13 +9,17 @@ import javax.sound.midi.Sequence;
 import processing.core.PApplet;
 import processing.core.PConstants;
 
-public class MidiWrite implements Drawable {
-    final int X_COORD = 100;
+public class MidiWrite extends Button {
+    final int X_COORD = 150;
     final int Y_COORD = 5;
     private AudioManager audioTrack;
 
     public MidiWrite(AudioManager audioTrack) {
         this.audioTrack = audioTrack;
+    }
+    
+    public int[] values() {
+        return new int[] {X_COORD, Y_COORD};
     }
 
     public void tick() {

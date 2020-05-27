@@ -5,14 +5,17 @@ import processing.core.PImage;
 
 public class Pointer implements Drawable {
     private PImage img;
+    private AudioManager audioTrack;
     private final int Y_COORD = 59;
     private final int INIT_X = 48;
-    private int X_COORD;
+    int X_COORD;
     private long lastTime;
     private boolean playing;
 
-    public Pointer(PImage img) {
+    public Pointer(PImage img, AudioManager audioTrack) {
         this.img = img;
+        this.audioTrack = audioTrack;
+        this.audioTrack.setPointer(this);
         X_COORD = INIT_X;
         lastTime = System.currentTimeMillis();
         playing = false;
@@ -27,7 +30,11 @@ public class Pointer implements Drawable {
         X_COORD = INIT_X;
     }
 
-    public void tick(PApplet app, AudioManager audioTrack) {
+    public int getCurrentTick() {
+        return (int)((this.X_COORD + 12 - 60)/7.5);
+    }
+
+    public void tick(PApplet app) {
         if(playing == false)
             return;
         if(System.currentTimeMillis() - lastTime >= (1/6) ) {

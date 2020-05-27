@@ -3,15 +3,21 @@ package piano;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class PlayButton implements Drawable {
+public class PlayButton extends Button {
 
     private PImage img;
     private boolean play;
-    final static int X_COORD = 5;
-    final static int Y_COORD = 5;
+    final int X_COORD = 5;
+    final int Y_COORD = 5;
+    
     public PlayButton(PImage img) {
         this.img = img;
         play = false;
+    }
+
+    
+    public int[] values() {
+        return new int[] {X_COORD, Y_COORD};
     }
 
     private void togglePlay(Pointer pointer, AudioManager audioTrack) {

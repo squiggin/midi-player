@@ -3,13 +3,18 @@ package piano;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class StopButton implements Drawable {
+public class StopButton extends Button {
 
     private PImage img;
-    final static int X_COORD = 50;
-    final static int Y_COORD = 5;
+    final int X_COORD = 50;
+    final int Y_COORD = 5;
+
     public StopButton(PImage img) {
         this.img = img;
+    }
+
+    public int[] values() {
+        return new int[] {X_COORD, Y_COORD};
     }
 
     public void tick(Pointer pointer, PlayButton playButton, AudioManager audioTrack) {

@@ -1,5 +1,7 @@
 package piano;
 
+import java.util.HashMap;
+
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
@@ -11,7 +13,9 @@ public class AudioManager {
     private Sequencer sequencer;
     private Sequence sequence;
     private Track track;
+    private Pointer pointer;
     private boolean isPlaying;
+    private Grid grid;
 
     public AudioManager() {
         try {
@@ -27,8 +31,30 @@ public class AudioManager {
         }
     }
 
+    void clear() {
+        try {
+            sequence = new Sequence(Sequence.PPQ, 4);
+            sequencer.setTempoInBPM(120);
+            track = sequence.createTrack();
+            sequencer.setSequence(sequence);
+            isPlaying = false;
+        } catch(Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void addAllNotes() {
+        sequence.deleteTrack(track);
+        track = sequence.createTrack();
+        for (HashMap<Integer, Block> row : grid.blocks.values()) {
+            for (Block block : row.values()) {
+                track.add(block.getEvent()[0]);
+                track.add(block.getEvent()[1]);
+            }
+        }
+    }
+
     public MidiEvent[] addNote(int noteNumber, int tick) {
-        System.out.println(isPlaying);
         MidiEvent event1 = null;
         MidiEvent event2 = null;
         try {
@@ -39,8 +65,35 @@ public class AudioManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        // if (!sequencer.isRunning() && isPlaying) {
+        //     System.out.println("Error");
+        //     addAllNotes();
+        //     try {
+        //         sequencer.setSequence(sequence);
+        //     } catch (Exception e) {
+        //         e.printStackTrace();
+        //     }
+        //     System.out.println(track.size());
+        // }
         track.add(event1);
         track.add(event2);
+        try {
+            sequencer.setSequence(sequence);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        if(pointer.getCurrentTick() != sequencer.getTickPosition())
+            System.out.println("......................");
+        // if(sequencer.getTickPosition() == 0)
+        // System.out.println(sequencer.getTickPosition() + " " + sequencer.isRunning());
+        // System.out.println(pointer.getCurrentTick());
+        if(sequencer.getTickPosition() == 0)
+        sequencer.setTickPosition(pointer.getCurrentTick());
+        // System.out.println(sequencer.getTickPosition() + " " + sequencer.isRunning());
+        if(!sequencer.isRunning() && isPlaying)
+            sequencer.start();
+        
         return new MidiEvent[] {event1, event2};
     }
 
@@ -70,6 +123,7 @@ public class AudioManager {
         this.stopPlaying();
         this.sequencer.setTickPosition(0);
         this.sequencer.start();
+        isPlaying = true;
     }
 
     public static void main(String[] args) {
@@ -99,4 +153,11 @@ public class AudioManager {
         return sequence;
     }
 
+    public void setGrid(Grid grid) {
+        this.grid = grid;
+    }
+
+    public void setPointer(Pointer pointer) {
+        this.pointer = pointer;
+    }
 }
