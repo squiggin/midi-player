@@ -1,37 +1,61 @@
 package piano;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 
+import javax.sound.midi.Instrument;
+import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
+import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
+
+import processing.core.PImage;
 
 public class AudioManager {
     private Sequencer sequencer;
     private Sequence sequence;
+    private Synthesizer synth;
+    private MidiChannel channel;
     private Track track;
     private Pointer pointer;
-    private boolean isPlaying;
     private Grid grid;
+    private InstrumentManager instrumentManager;
+    private int currentTick;
+    private boolean isPlaying;
+    private List<Integer> currentlyActive;
 
     public AudioManager() {
         try {
+            synth = MidiSystem.getSynthesizer();
+            channel = synth.getChannels()[0];
+
             sequencer = MidiSystem.getSequencer();
             sequencer.open();
+
             sequence = new Sequence(Sequence.PPQ, 4);
             sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
             sequencer.setSequence(sequence);
+
+            currentTick = 0;
             isPlaying = false;
+            currentlyActive = new LinkedList<>();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    void clear() {
+    public void setup(PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
+        instrumentManager = new InstrumentManager(synth, imgBack, bFront, pFront, mFront, sFront);
+    }
+
+    public void clear() {
         try {
             sequence = new Sequence(Sequence.PPQ, 4);
             sequencer.setTempoInBPM(120);
@@ -43,7 +67,7 @@ public class AudioManager {
         }
     }
 
-    private void addAllNotes() {
+    /*private void addAllNotes() {
         sequence.deleteTrack(track);
         track = sequence.createTrack();
         for (HashMap<Integer, Block> row : grid.blocks.values()) {
@@ -52,7 +76,7 @@ public class AudioManager {
                 track.add(block.getEvent()[1]);
             }
         }
-    }
+    }*/
 
     public MidiEvent[] addNote(int noteNumber, int tick) {
         MidiEvent event1 = null;
@@ -65,34 +89,8 @@ public class AudioManager {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        // if (!sequencer.isRunning() && isPlaying) {
-        //     System.out.println("Error");
-        //     addAllNotes();
-        //     try {
-        //         sequencer.setSequence(sequence);
-        //     } catch (Exception e) {
-        //         e.printStackTrace();
-        //     }
-        //     System.out.println(track.size());
-        // }
         track.add(event1);
         track.add(event2);
-        try {
-            sequencer.setSequence(sequence);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        if(pointer.getCurrentTick() != sequencer.getTickPosition())
-            System.out.println("......................");
-        // if(sequencer.getTickPosition() == 0)
-        // System.out.println(sequencer.getTickPosition() + " " + sequencer.isRunning());
-        // System.out.println(pointer.getCurrentTick());
-        if(sequencer.getTickPosition() == 0)
-        sequencer.setTickPosition(pointer.getCurrentTick());
-        // System.out.println(sequencer.getTickPosition() + " " + sequencer.isRunning());
-        if(!sequencer.isRunning() && isPlaying)
-            sequencer.start();
         
         return new MidiEvent[] {event1, event2};
     }
@@ -103,26 +101,33 @@ public class AudioManager {
     }
 
     public void startPlaying() {
-        float tempo = sequencer.getTempoInBPM();
-        try {
-            sequencer.setSequence(sequence);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        sequencer.setTempoInBPM(tempo);
-        sequencer.start();
         isPlaying = true;
     }
 
     public void stopPlaying() {
-        sequencer.stop();
         isPlaying = false;
     }
 
+    public void run() {
+        if (isPlaying) {
+            if(pointer.getCurrentTick() != this.currentTick) {
+                if (grid.blocks.get(pointer.getCurrentTick()/2) != null) {
+                    System.out.println(grid.blocks.get(pointer.getCurrentTick()/2));
+                    for (int note: currentlyActive) {
+                        channel.noteOff(note);
+                    }
+                    currentlyActive.clear();
+                    for (int note: grid.blocks.get(pointer.getCurrentTick()/2).keySet()) {
+                        currentlyActive.add(note);
+                        channel.noteOn(note, 90);
+                    }
+                }
+                currentTick = pointer.getCurrentTick()/2;
+            }
+        }
+    }
+
     public void reset() {
-        this.stopPlaying();
-        this.sequencer.setTickPosition(0);
-        this.sequencer.start();
         isPlaying = true;
     }
 

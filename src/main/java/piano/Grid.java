@@ -23,7 +23,7 @@ public class Grid implements Drawable {
         blocks = new HashMap<Integer, HashMap<Integer, Block>>();
     }
 
-    void clear() {
+    public void clear() {
         blocks = new HashMap<Integer, HashMap<Integer, Block>>();
     }
 
@@ -51,8 +51,8 @@ public class Grid implements Drawable {
 
     public void render(PApplet app) {
         app.image(img, X_COORD, Y_COORD);
-        for(HashMap<Integer, Block> row: blocks.values()) {
-            for(Block block: row.values())
+        for(HashMap<Integer, Block> column: blocks.values()) {
+            for(Block block: column.values())
                 block.render(app);
         }
     }

@@ -1,4 +1,4 @@
-package piano;
+package piano.Buttons;
 
 import java.io.File;
 import java.io.IOException;
@@ -6,6 +6,8 @@ import java.io.IOException;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
 
+import piano.AudioManager;
+import piano.Button;
 import processing.core.PApplet;
 import processing.core.PConstants;
 

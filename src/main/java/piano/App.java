@@ -1,5 +1,9 @@
 package piano;
 
+import piano.Buttons.MidiWrite;
+import piano.Buttons.PlayButton;
+import piano.Buttons.ResetButton;
+import piano.Buttons.StopButton;
 import processing.core.PApplet;
 import processing.core.PImage;
 
@@ -87,6 +91,7 @@ public class App extends PApplet {
         write.render(this);
         point.tick(this);
         point.render(this);
+        audioTrack.run();
     }
 
     public static void main(String[] args) {

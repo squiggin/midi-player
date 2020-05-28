@@ -1,5 +1,8 @@
-package piano;
+package piano.Buttons;
 
+import piano.AudioManager;
+import piano.Button;
+import piano.Pointer;
 import processing.core.PApplet;
 import processing.core.PImage;
 
