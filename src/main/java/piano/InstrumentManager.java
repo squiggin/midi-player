@@ -19,21 +19,29 @@ public class InstrumentManager {
         banjo = new BanjoButton(imgBack, bFront);
         sax = new SaxButton(imgBack, sFront);
         for (Instrument in: synth.getAvailableInstruments()) {
-            switch(in.getName()) {
+            switch(in.getName().trim()) {
                 case "Piano 2":
-                    piano.setInstrument(in);
+                    if (piano.getInstrument() == null) {
+                        piano.setInstrument(in);
+                    }
                     break;
 
                 case "Marimba":
-                    marimba.setInstrument(in);
+                    if (marimba.getInstrument() == null) {
+                        marimba.setInstrument(in);
+                    }
                     break;
                 
                 case "Banjo":
-                    banjo.setInstrument(in);
+                    if (banjo.getInstrument() == null) {
+                        banjo.setInstrument(in);
+                    }
                     break;
                 
                 case "Alto Sax":
-                    sax.setInstrument(in);
+                    if (sax.getInstrument() == null) {
+                        sax.setInstrument(in);
+                    }
                     break;
                 
                 default:

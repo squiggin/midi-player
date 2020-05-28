@@ -19,7 +19,6 @@ public class Grid implements Drawable {
         this.img = img;
         this.blockImg = blockImg;
         this.audioTrack = audioTrack;
-        this.audioTrack.setGrid(this);
         blocks = new HashMap<Integer, HashMap<Integer, Block>>();
     }
 

@@ -15,7 +15,6 @@ public class Pointer implements Drawable {
     public Pointer(PImage img, AudioManager audioTrack) {
         this.img = img;
         this.audioTrack = audioTrack;
-        this.audioTrack.setPointer(this);
         X_COORD = INIT_X;
         lastTime = System.currentTimeMillis();
         playing = false;

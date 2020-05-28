@@ -32,6 +32,7 @@ public class AudioManager {
     public AudioManager() {
         try {
             synth = MidiSystem.getSynthesizer();
+            synth.open();
             channel = synth.getChannels()[0];
 
             sequencer = MidiSystem.getSequencer();
@@ -42,7 +43,7 @@ public class AudioManager {
             track = sequence.createTrack();
             sequencer.setSequence(sequence);
 
-            currentTick = 0;
+            currentTick = -1;
             isPlaying = false;
             currentlyActive = new LinkedList<>();
 
@@ -53,6 +54,9 @@ public class AudioManager {
 
     public void setup(PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
         instrumentManager = new InstrumentManager(synth, imgBack, bFront, pFront, mFront, sFront);
+        Instrument current = instrumentManager.marimba.getInstrument();
+        synth.loadInstrument(current);
+        channel.programChange(current.getPatch().getBank(), current.getPatch().getProgram());
     }
 
     public void clear() {
@@ -67,7 +71,7 @@ public class AudioManager {
         }
     }
 
-    /*private void addAllNotes() {
+    public void addAllNotes() {
         sequence.deleteTrack(track);
         track = sequence.createTrack();
         for (HashMap<Integer, Block> row : grid.blocks.values()) {
@@ -76,7 +80,7 @@ public class AudioManager {
                 track.add(block.getEvent()[1]);
             }
         }
-    }*/
+    }
 
     public MidiEvent[] addNote(int noteNumber, int tick) {
         MidiEvent event1 = null;
@@ -105,22 +109,29 @@ public class AudioManager {
     }
 
     public void stopPlaying() {
+        this.currentTick = -1;
         isPlaying = false;
     }
 
     public void run() {
         if (isPlaying) {
-            if(pointer.getCurrentTick() != this.currentTick) {
+            if(pointer.getCurrentTick()/2 != this.currentTick) {
+                for (int note: currentlyActive) {
+                    channel.noteOff(note);
+                    //System.out.print(note + " off; ");
+                }
+                currentlyActive.clear();
+
                 if (grid.blocks.get(pointer.getCurrentTick()/2) != null) {
+                    /*System.out.println(pointer.getCurrentTick()/2);
                     System.out.println(grid.blocks.get(pointer.getCurrentTick()/2));
-                    for (int note: currentlyActive) {
-                        channel.noteOff(note);
-                    }
-                    currentlyActive.clear();
+                    System.out.println();*/
                     for (int note: grid.blocks.get(pointer.getCurrentTick()/2).keySet()) {
-                        currentlyActive.add(note);
-                        channel.noteOn(note, 90);
+                        currentlyActive.add(60 + (12 - note));
+                        channel.noteOn(60 + (12 - note), 90);
+                        //System.out.print(note + " on; ");
                     }
+                    //System.out.println();
                 }
                 currentTick = pointer.getCurrentTick()/2;
             }
@@ -129,6 +140,7 @@ public class AudioManager {
 
     public void reset() {
         isPlaying = true;
+        this.currentTick = -1;
     }
 
     public static void main(String[] args) {
