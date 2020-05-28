@@ -1,8 +1,12 @@
 package piano;
 
+import piano.Buttons.InstrumentNext;
+import piano.Buttons.InstrumentPrev;
+import piano.Buttons.LoadButton;
 import piano.Buttons.MidiWrite;
 import piano.Buttons.PlayButton;
 import piano.Buttons.ResetButton;
+import piano.Buttons.SaveButton;
 import piano.Buttons.StopButton;
 
 public class SessionManager {
@@ -12,9 +16,14 @@ public class SessionManager {
     private StopButton stop;
     private MidiWrite write;
     private ResetButton reset;
+    private SaveButton save;
+    private LoadButton load;
+    private InstrumentNext nextInst;
+    private InstrumentPrev prevInst;
     private Pointer point;
     private Grid grid;
     private AudioManager audioTrack;
+    private InstrumentManager instManager;
 
     SessionManager(App app) {
         this.app = app;
@@ -30,15 +39,26 @@ public class SessionManager {
         point = new Pointer(app.images[Asset.Pointer.get()], audioTrack);
         grid = new Grid(app.images[Asset.Grid.get()], app.images[Asset.Block.get()], audioTrack);
         write = new MidiWrite(audioTrack);
+        save = new SaveButton(app.images[Asset.ButtonBack.get()],
+                                app.images[Asset.Save.get()]);
+        load = new LoadButton(app.images[Asset.ButtonBack.get()],
+                                app.images[Asset.Load.get()]);
+        nextInst = new InstrumentNext(app.images[Asset.ButtonBack.get()],
+                                app.images[Asset.Next.get()]);
+        prevInst = new InstrumentPrev(app.images[Asset.ButtonBack.get()],
+                                app.images[Asset.Prev.get()]);
 
         audioTrack.setPointer(point);
         audioTrack.setGrid(grid);
 
-        audioTrack.setup(app.images[Asset.ButtonBack.get()],
+        instManager = audioTrack.setup(app.images[Asset.ButtonBack.get()],
                          app.images[Asset.Banjo.get()],
                          app.images[Asset.Piano.get()],
                          app.images[Asset.Marimba.get()],
                          app.images[Asset.Saxophone.get()]);
+        
+        nextInst.setInstManager(instManager);
+        prevInst.setInstManager(instManager);
 
         // Single render
 
@@ -57,7 +77,7 @@ public class SessionManager {
     }
 
     public void clickHandler(int mouseX, int mouseY) {
-        try {
+        
         if(isButtonClicked(play, 40, mouseX, mouseY)) {
             play.tick(this.point, this.audioTrack);
         } else if(isButtonClicked(stop, 40, mouseX, mouseY)) {
@@ -66,13 +86,17 @@ public class SessionManager {
             write.tick();
         } else if(isButtonClicked(reset, 40, mouseX, mouseY)) {
             reset.tick(grid, stop, point, play, audioTrack);
+        } else if(isButtonClicked(save, 40, mouseX, mouseY)) {
+            save.tick();
+        } else if(isButtonClicked(load, 40, mouseX, mouseY)) {
+            load.tick();
+        } else if(isButtonClicked(nextInst, 40, mouseX, mouseY)) {
+            nextInst.tick();
+        } else if(isButtonClicked(prevInst, 40, mouseX, mouseY)) {
+            prevInst.tick();
         } else if(mouseX >= grid.X_COORD &&
                 mouseY >= grid.Y_COORD) {
             grid.tick(mouseX, mouseY);
-        }
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.exit(1);
         }
     }
 
@@ -83,10 +107,14 @@ public class SessionManager {
         stop.render(app);
         play.render(app);
         reset.render(app);
+        save.render(app);
+        load.render(app);
+        prevInst.render(app);
+        nextInst.render(app);
         write.render(app);
         point.tick(app);
         point.render(app);
-        audioTrack.run();
+        audioTrack.run(app);
     }
 
 }

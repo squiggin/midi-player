@@ -4,16 +4,22 @@ import javax.sound.midi.Instrument;
 import javax.sound.midi.Synthesizer;
 
 import piano.Instruments.*;
+import processing.core.PApplet;
 import processing.core.PImage;
 
 public class InstrumentManager {
+
+    private InstrumentButton[] instrumentButtons;
+    private int currentIndex;
+    private AudioManager audioTrack;
     PianoButton piano;
     MarimbaButton marimba;
     BanjoButton banjo;
     SaxButton sax;
 
-    public InstrumentManager(Synthesizer synth,
+    public InstrumentManager(AudioManager audioTrack, Synthesizer synth,
         PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
+        this.audioTrack = audioTrack;
         piano = new PianoButton(imgBack, pFront);
         marimba = new MarimbaButton(imgBack, mFront);
         banjo = new BanjoButton(imgBack, bFront);
@@ -55,6 +61,28 @@ public class InstrumentManager {
             System.out.println("An instrument was not found.");
         }
 
+        instrumentButtons = new InstrumentButton[] {piano, marimba, banjo, sax};
+        currentIndex = 0;
+    }
+
+    public void next() {
+        if (currentIndex < 3)
+            currentIndex++;
+        audioTrack.updateInstrument();
+    }
+
+    public void prev() {
+        if (currentIndex > 0)
+            currentIndex--;
+        audioTrack.updateInstrument();
+    }
+
+    public Instrument getInstrument() {
+        return instrumentButtons[currentIndex].getInstrument();
+    }
+
+    public void render(PApplet app) {
+        instrumentButtons[currentIndex].render(app);
     }
 
 }

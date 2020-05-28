@@ -2,17 +2,14 @@ package piano.Instruments;
 
 import javax.sound.midi.Instrument;
 
-import piano.Button;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class SaxButton extends Button {
+public class SaxButton extends InstrumentButton {
     private Instrument instrument;
     
     PImage imgBack;
     PImage imgFront;
-    final int X_COORD = 150;
-    final int Y_COORD = 5;
     
     public SaxButton(PImage imgBack, PImage imgFront) {
         this.imgBack = imgBack;

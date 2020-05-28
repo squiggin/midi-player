@@ -2,7 +2,7 @@ package piano;
 
 import processing.core.PApplet;
 
-public abstract class Button implements Drawable{
+public abstract class Button implements Drawable {
     int X_COORD;
     int Y_COORD;
 

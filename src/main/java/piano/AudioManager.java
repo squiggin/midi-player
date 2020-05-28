@@ -14,6 +14,7 @@ import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 
 public class AudioManager {
@@ -25,6 +26,7 @@ public class AudioManager {
     private Pointer pointer;
     private Grid grid;
     private InstrumentManager instrumentManager;
+    private MidiEvent currentInstrumentEvent;
     private int currentTick;
     private boolean isPlaying;
     private List<Integer> currentlyActive;
@@ -42,6 +44,7 @@ public class AudioManager {
             sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
             sequencer.setSequence(sequence);
+            currentInstrumentEvent = null;
 
             currentTick = -1;
             isPlaying = false;
@@ -52,11 +55,48 @@ public class AudioManager {
         }
     }
 
-    public void setup(PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
-        instrumentManager = new InstrumentManager(synth, imgBack, bFront, pFront, mFront, sFront);
-        Instrument current = instrumentManager.marimba.getInstrument();
+    public InstrumentManager setup(PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
+        instrumentManager = new InstrumentManager(this, synth, imgBack, bFront, pFront, mFront, sFront);
+        updateInstrument();
+        return instrumentManager;
+    }
+
+    public void updateInstrument() {
+        Instrument current = instrumentManager.getInstrument();
+        setInstrument(current);
+    }
+
+    public void setInstrument(Instrument current) {
+        if (currentInstrumentEvent != null) {
+            track.remove(currentInstrumentEvent);
+        }
         synth.loadInstrument(current);
         channel.programChange(current.getPatch().getBank(), current.getPatch().getProgram());
+
+        // The following removal of events at tick 0 is to make the intrument change the first \
+        // event of the sequence.
+        List<MidiEvent> events = new LinkedList<>();
+        try {
+            try {
+                // Keep removing events at tick 0 until IndexOutOfBoundsException encountered
+                while (true) {
+                    MidiEvent event = track.get(0);
+                    track.remove(event);
+                }
+            } catch (IndexOutOfBoundsException e) {
+                ;
+            }
+            currentInstrumentEvent = new MidiEvent(
+                new ShortMessage(ShortMessage.PROGRAM_CHANGE, 1, current.getPatch().getProgram(), 0),
+                0);
+            track.add(currentInstrumentEvent);
+            // Then add the events back after changing the instrument
+            for (MidiEvent event: events) {
+                track.add(event);
+            }
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
     }
 
     public void clear() {
@@ -89,7 +129,7 @@ public class AudioManager {
             ShortMessage message = new ShortMessage(144, 1, noteNumber, 90);
             event1 = new MidiEvent(message, tick);
             message = new ShortMessage(128, 1, noteNumber, 90);
-            event2 = new MidiEvent(message, tick + 4);
+            event2 = new MidiEvent(message, tick + 2);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -110,28 +150,24 @@ public class AudioManager {
 
     public void stopPlaying() {
         this.currentTick = -1;
+        channel.allNotesOff();
         isPlaying = false;
     }
 
-    public void run() {
+    public void run(PApplet app) {
+        instrumentManager.render(app);
         if (isPlaying) {
             if(pointer.getCurrentTick()/2 != this.currentTick) {
                 for (int note: currentlyActive) {
                     channel.noteOff(note);
-                    //System.out.print(note + " off; ");
                 }
                 currentlyActive.clear();
 
                 if (grid.blocks.get(pointer.getCurrentTick()/2) != null) {
-                    /*System.out.println(pointer.getCurrentTick()/2);
-                    System.out.println(grid.blocks.get(pointer.getCurrentTick()/2));
-                    System.out.println();*/
                     for (int note: grid.blocks.get(pointer.getCurrentTick()/2).keySet()) {
                         currentlyActive.add(60 + (12 - note));
                         channel.noteOn(60 + (12 - note), 90);
-                        //System.out.print(note + " on; ");
                     }
-                    //System.out.println();
                 }
                 currentTick = pointer.getCurrentTick()/2;
             }

@@ -12,7 +12,7 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 
 public class MidiWrite extends Button {
-    final int X_COORD = 150;
+    final int X_COORD = 390;
     final int Y_COORD = 5;
     private AudioManager audioTrack;
 
@@ -25,7 +25,6 @@ public class MidiWrite extends Button {
     }
 
     public void tick() {
-        System.out.println("tick");
         File midiFile = new File("Out.midi");
         System.out.println(midiFile.getAbsolutePath());
         Sequence writeSequence = audioTrack.getSequence();
@@ -42,9 +41,11 @@ public class MidiWrite extends Button {
         app.fill(130, 130, 200);
         app.rect(X_COORD, Y_COORD, 70, 40);
         app.fill(240);
-        app.textSize(22);
+        app.textSize(20);
         app.textAlign(PConstants.CENTER, PConstants.CENTER);
-        app.text("Write", X_COORD + 35, Y_COORD + 20);
+        app.text("Export", X_COORD + 35, Y_COORD + 7);
+        app.textSize(18);
+        app.text("MIDI", X_COORD + 35, Y_COORD + 27);
     }
 
 }

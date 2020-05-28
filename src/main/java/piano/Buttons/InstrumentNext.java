@@ -1,37 +1,40 @@
 package piano.Buttons;
 
-import piano.AudioManager;
 import piano.Button;
-import piano.Grid;
-import piano.Pointer;
+import piano.InstrumentManager;
 import processing.core.PApplet;
 import processing.core.PImage;
 
-public class ResetButton extends Button {
-
+public class InstrumentNext extends Button{
+    
     private PImage imgBack;
     private PImage imgFront;
-    final int X_COORD = 95;
+    private InstrumentManager instManager;
+    final int X_COORD = 325;
     final int Y_COORD = 5;
 
-    public ResetButton(PImage imgBack, PImage imgFront) {
+    public InstrumentNext(PImage imgBack, PImage imgFront) {
         this.imgBack = imgBack;
         this.imgFront = imgFront;
     }
 
+    @Override
     public int[] values() {
         return new int[] {X_COORD, Y_COORD};
     }
-
-    public void tick(Grid grid, StopButton stop, Pointer point, PlayButton play, AudioManager audioTrack) {
-        System.out.println("Reset");
-        grid.clear();
-        stop.tick(point, play, audioTrack);
-        audioTrack.clear();
+    
+    public void tick() {
+        instManager.next();
+        System.out.println("next");
     }
 
     public void render(PApplet app) {
         app.image(imgBack, X_COORD, Y_COORD);
         app.image(imgFront, X_COORD, Y_COORD);
     }
+
+    public void setInstManager(InstrumentManager instManager) {
+        this.instManager = instManager;
+    }
+
 }
