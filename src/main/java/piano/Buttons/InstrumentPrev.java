@@ -10,7 +10,7 @@ public class InstrumentPrev extends Button {
     private PImage imgBack;
     private PImage imgFront;
     private InstrumentManager instManager;
-    final int X_COORD = 235;
+    final int X_COORD = 275;
     final int Y_COORD = 5;
 
     public InstrumentPrev(PImage imgBack, PImage imgFront) {

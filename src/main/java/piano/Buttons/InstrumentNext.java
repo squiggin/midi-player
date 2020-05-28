@@ -10,7 +10,7 @@ public class InstrumentNext extends Button{
     private PImage imgBack;
     private PImage imgFront;
     private InstrumentManager instManager;
-    final int X_COORD = 325;
+    final int X_COORD = 365;
     final int Y_COORD = 5;
 
     public InstrumentNext(PImage imgBack, PImage imgFront) {

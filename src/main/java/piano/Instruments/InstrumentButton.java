@@ -6,7 +6,7 @@ import piano.Button;
 import processing.core.PApplet;
 
 public abstract class InstrumentButton extends Button {
-    final int X_COORD = 280;
+    final int X_COORD = 320;
     final int Y_COORD = 5;
     
     public abstract int[] values();
