@@ -10,8 +10,8 @@ public class PlayButton extends Button {
 
     private PImage img;
     private boolean play;
-    final int X_COORD = 5;
-    final int Y_COORD = 5;
+    public final int X_COORD = 5;
+    public final int Y_COORD = 5;
     
     public PlayButton(PImage img) {
         this.img = img;

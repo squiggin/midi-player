@@ -16,8 +16,8 @@ public class LoadButton extends Button {
 
     private PImage imgBack;
     private PImage imgFront;
-    final int X_COORD = 185;
-    final int Y_COORD = 5;
+    public final int X_COORD = 185;
+    public final int Y_COORD = 5;
 
     public LoadButton(PImage imgBack, PImage imgFront) {
         this.imgBack = imgBack;

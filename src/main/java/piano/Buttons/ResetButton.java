@@ -11,8 +11,8 @@ public class ResetButton extends Button {
 
     private PImage imgBack;
     private PImage imgFront;
-    final int X_COORD = 95;
-    final int Y_COORD = 5;
+    public final int X_COORD = 95;
+    public final int Y_COORD = 5;
 
     public ResetButton(PImage imgBack, PImage imgFront) {
         this.imgBack = imgBack;
@@ -23,10 +23,10 @@ public class ResetButton extends Button {
         return new int[] {X_COORD, Y_COORD};
     }
 
-    public void tick(Grid grid, StopButton stop, Pointer point, PlayButton play, AudioManager audioTrack) {
+    public void tick(Grid grid, StopButton stop, Pointer pointer, PlayButton play, AudioManager audioTrack) {
         System.out.println("Reset");
         grid.clear();
-        stop.tick(point, play, audioTrack);
+        stop.tick(pointer, play, audioTrack);
         audioTrack.clear();
     }
 

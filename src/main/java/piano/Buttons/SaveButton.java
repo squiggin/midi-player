@@ -15,8 +15,8 @@ public class SaveButton extends Button {
 
     private PImage imgBack;
     private PImage imgFront;
-    final int X_COORD = 140;
-    final int Y_COORD = 5;
+    public final int X_COORD = 140;
+    public final int Y_COORD = 5;
 
     public SaveButton(PImage imgBack, PImage imgFront) {
         this.imgBack = imgBack;

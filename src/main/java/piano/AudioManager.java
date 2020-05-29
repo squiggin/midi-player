@@ -1,6 +1,5 @@
 package piano;
 
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -138,17 +137,6 @@ public class AudioManager {
         }
     }
 
-    public void addAllNotes() {
-        sequence.deleteTrack(track);
-        track = sequence.createTrack();
-        for (HashMap<Integer, Block> row : grid.blocks.values()) {
-            for (Block block : row.values()) {
-                track.add(block.getEvent()[0]);
-                track.add(block.getEvent()[1]);
-            }
-        }
-    }
-
     public MidiEvent[] addNote(int noteNumber, int tick) {
         MidiEvent event1 = null;
         MidiEvent event2 = null;
@@ -206,29 +194,6 @@ public class AudioManager {
         this.currentTick = -1;
     }
 
-    public static void main(String[] args) {
-        AudioManager a = new AudioManager();
-        a.addNote(60, 0);
-        a.addNote(61, 4);
-        a.addNote(60, 8);
-        a.addNote(63, 12);
-        try {
-            a.sequencer.setSequence(a.sequence);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        a.sequencer.setTempoInBPM(120);
-        a.sequencer.start(); 
-
-        while (true) { 
-            // Exit the program when sequencer has stopped playing. 
-            if (!a.sequencer.isRunning()) { 
-                a.sequencer.close(); 
-                break; 
-            } 
-        }
-    }
-
     public Sequence getSequence() {
         return sequence;
     }
@@ -240,4 +205,9 @@ public class AudioManager {
     public void setPointer(Pointer pointer) {
         this.pointer = pointer;
     }
+
+    public boolean isPlaying() {
+        return isPlaying;
+    }
+
 }

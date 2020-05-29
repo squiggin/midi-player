@@ -48,4 +48,9 @@ public class App extends PApplet {
         // Don't touch this
         PApplet.main("piano.App");
     }
+
+    public SessionManager getSession() {
+        return session;
+    }
+
 }

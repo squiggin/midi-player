@@ -12,8 +12,8 @@ import processing.core.PApplet;
 import processing.core.PConstants;
 
 public class MidiWrite extends Button {
-    final int X_COORD = 440;
-    final int Y_COORD = 5;
+    public final int X_COORD = 440;
+    public final int Y_COORD = 5;
     private AudioManager audioTrack;
 
     public MidiWrite(AudioManager audioTrack) {

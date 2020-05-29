@@ -10,8 +10,8 @@ public class InstrumentPrev extends Button {
     private PImage imgBack;
     private PImage imgFront;
     private InstrumentManager instManager;
-    final int X_COORD = 275;
-    final int Y_COORD = 5;
+    public final int X_COORD = 275;
+    public final int Y_COORD = 5;
 
     public InstrumentPrev(PImage imgBack, PImage imgFront) {
         this.imgBack = imgBack;

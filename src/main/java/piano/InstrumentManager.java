@@ -12,10 +12,10 @@ public class InstrumentManager {
     private InstrumentButton[] instrumentButtons;
     private int currentIndex;
     private AudioManager audioTrack;
-    PianoButton piano;
-    MarimbaButton marimba;
-    BanjoButton banjo;
-    SaxButton sax;
+    private PianoButton piano;
+    private MarimbaButton marimba;
+    private BanjoButton banjo;
+    private SaxButton sax;
 
     public InstrumentManager(AudioManager audioTrack, Synthesizer synth,
         PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
@@ -92,6 +92,22 @@ public class InstrumentManager {
     public void setCurrentIndex(int currentIndex) {
         this.currentIndex = currentIndex;
         audioTrack.updateInstrument();
+    }
+
+    public PianoButton getPiano() {
+        return piano;
+    }
+
+    public MarimbaButton getMarimba() {
+        return marimba;
+    }
+
+    public BanjoButton getBanjo() {
+        return banjo;
+    }
+
+    public SaxButton getSax() {
+        return sax;
     }
 
 }

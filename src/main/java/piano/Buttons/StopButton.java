@@ -9,8 +9,8 @@ import processing.core.PImage;
 public class StopButton extends Button {
 
     private PImage img;
-    final int X_COORD = 50;
-    final int Y_COORD = 5;
+    public final int X_COORD = 50;
+    public final int Y_COORD = 5;
 
     public StopButton(PImage img) {
         this.img = img;

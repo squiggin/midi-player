@@ -121,9 +121,53 @@ public class SessionManager {
         prevInst.render(app);
         nextInst.render(app);
         write.render(app);
-        point.tick(app);
+        point.tick();
         point.render(app);
         audioTrack.run(app);
+    }
+
+    public InstrumentNext getNextInst() {
+        return nextInst;
+    }
+
+    public InstrumentPrev getPrevInst() {
+        return prevInst;
+    }
+
+    public PlayButton getPlay() {
+        return play;
+    }
+
+    public StopButton getStop() {
+        return stop;
+    }
+
+    public MidiWrite getWrite() {
+        return write;
+    }
+
+    public ResetButton getReset() {
+        return reset;
+    }
+
+    public SaveButton getSave() {
+        return save;
+    }
+
+    public LoadButton getLoad() {
+        return load;
+    }
+
+    public Grid getGrid() {
+        return grid;
+    }
+
+    public AudioManager getAudioTrack() {
+        return audioTrack;
+    }
+
+    public InstrumentManager getInstManager() {
+        return instManager;
     }
 
 }
