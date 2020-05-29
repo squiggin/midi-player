@@ -26,7 +26,7 @@ public class InstrumentManager {
         sax = new SaxButton(imgBack, sFront);
         for (Instrument in: synth.getAvailableInstruments()) {
             switch(in.getName().trim()) {
-                case "Piano 2":
+                case "Piano 3":
                     if (piano.getInstrument() == null) {
                         piano.setInstrument(in);
                     }
@@ -83,6 +83,15 @@ public class InstrumentManager {
 
     public void render(PApplet app) {
         instrumentButtons[currentIndex].render(app);
+    }
+
+    public int getCurrentIndex() {
+        return currentIndex;
+    }
+
+    public void setCurrentIndex(int currentIndex) {
+        this.currentIndex = currentIndex;
+        audioTrack.updateInstrument();
     }
 
 }

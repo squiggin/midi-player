@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.sound.midi.Instrument;
+import javax.sound.midi.MetaMessage;
 import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
@@ -27,6 +28,7 @@ public class AudioManager {
     private Grid grid;
     private InstrumentManager instrumentManager;
     private MidiEvent currentInstrumentEvent;
+    private MidiEvent tempoEvent;
     private int currentTick;
     private boolean isPlaying;
     private List<Integer> currentlyActive;
@@ -44,12 +46,32 @@ public class AudioManager {
             sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
             sequencer.setSequence(sequence);
+            setTempoTo120BPM();
             currentInstrumentEvent = null;
 
             currentTick = -1;
             isPlaying = false;
             currentlyActive = new LinkedList<>();
 
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void setTempoTo120BPM() {
+        // Byte array conatining the tempo in microseconds per quarter note
+        // 120 bpm corresponds to 500,000 microseconds per quarter note
+        // Also, quarter note is the same as a beat
+        // Took me long enough to realise that
+        // Hexadecimal(500,000) = 0x07A120
+
+        byte[] data = new byte[] { (byte) 0x07, (byte) 0xA1, (byte) 0x20 };
+        try {
+            // MetaMessage type 0x51, or 81 in decimal, is set tempo
+            // And the size is 3 because we're giving three bytes
+            MetaMessage setTempo = new MetaMessage(81, data, 3);
+            tempoEvent = new MidiEvent(setTempo, 0);
+            track.add(tempoEvent);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -82,6 +104,7 @@ public class AudioManager {
                 while (true) {
                     MidiEvent event = track.get(0);
                     track.remove(event);
+                    events.add(event);
                 }
             } catch (IndexOutOfBoundsException e) {
                 ;
@@ -89,9 +112,13 @@ public class AudioManager {
             currentInstrumentEvent = new MidiEvent(
                 new ShortMessage(ShortMessage.PROGRAM_CHANGE, 1, current.getPatch().getProgram(), 0),
                 0);
+            track.add(tempoEvent);
             track.add(currentInstrumentEvent);
             // Then add the events back after changing the instrument
             for (MidiEvent event: events) {
+                if (event.equals(tempoEvent)) {
+                    continue;
+                }
                 track.add(event);
             }
 		} catch (Exception e) {

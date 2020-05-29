@@ -65,6 +65,15 @@ public class SessionManager {
         app.image(app.images[Asset.Keyboard.get()], 0, 75);
     }
 
+    /**
+     * 
+     * @param button
+     * @param sizeX
+     * @param sizeY
+     * @param mouseX
+     * @param mouseY
+     * @return
+     */
     private boolean isButtonClicked(Button button, int sizeX, int sizeY, int mouseX, int mouseY) {
         return(mouseX >= button.X_COORD &&
         mouseX <= button.X_COORD + sizeX &&
@@ -87,9 +96,9 @@ public class SessionManager {
         } else if(isButtonClicked(reset, 40, mouseX, mouseY)) {
             reset.tick(grid, stop, point, play, audioTrack);
         } else if(isButtonClicked(save, 40, mouseX, mouseY)) {
-            save.tick();
+            save.tick(audioTrack, instManager, grid);
         } else if(isButtonClicked(load, 40, mouseX, mouseY)) {
-            load.tick();
+            load.tick(instManager, grid);
         } else if(isButtonClicked(nextInst, 40, mouseX, mouseY)) {
             nextInst.tick();
         } else if(isButtonClicked(prevInst, 40, mouseX, mouseY)) {

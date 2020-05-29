@@ -11,7 +11,7 @@ public class Grid implements Drawable {
     private PImage img;
     private PImage blockImg;
     private AudioManager audioTrack;
-    HashMap<Integer, HashMap<Integer, Block>> blocks;
+    public HashMap<Integer, HashMap<Integer, Block>> blocks;
     final int X_COORD = 60;
     final int Y_COORD = 75;
 
@@ -28,7 +28,11 @@ public class Grid implements Drawable {
 
     public void tick(int clickX, int clickY) {
 
-        Integer[] blockKey = new Integer[] {(clickX - 60)/15, (clickY - 75)/20};
+        int[] blockKey = new int[] {(clickX - 60)/15, (clickY - 75)/20};
+        addRemoveNotes(blockKey);
+    }
+
+    public void addRemoveNotes(int[] blockKey) {
         if(blocks.containsKey(blockKey[0])) {
             if(blocks.get(blockKey[0]).containsKey(blockKey[1])) {
                 Block removeBlock = blocks.get(blockKey[0]).remove(blockKey[1]);
