@@ -19,17 +19,34 @@ public class ResetButton extends Button {
         this.imgFront = imgFront;
     }
 
+    /**
+     * 
+     * @return  The x coordinate and y coordinate associated with the button,
+     *          wrapped in an array.
+     */
     public int[] values() {
         return new int[] {X_COORD, Y_COORD};
     }
 
+    
+    /** Clears the current notes, stops playback and resets the pointer to the start
+     * 
+     * @param grid          Grid object associated with the current session
+     * @param stop          Stop Button associated with the current session
+     * @param pointer       Pointer object associated with the current session
+     * @param play          Play Button associated with the current session
+     * @param audioTrack    AudioManager object associated with the current session
+     */
     public void tick(Grid grid, StopButton stop, Pointer pointer, PlayButton play, AudioManager audioTrack) {
-        System.out.println("Reset");
         grid.clear();
         stop.tick(pointer, play, audioTrack);
         audioTrack.clear();
     }
 
+    
+    /** Draws button image on the PApplet object
+     * @param app
+     */
     public void render(PApplet app) {
         app.image(imgBack, X_COORD, Y_COORD);
         app.image(imgFront, X_COORD, Y_COORD);

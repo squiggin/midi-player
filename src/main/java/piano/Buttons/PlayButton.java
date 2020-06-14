@@ -19,10 +19,23 @@ public class PlayButton extends Button {
     }
 
     
+    
+    /**
+     * 
+     * @return  The x coordinate and y coordinate associated with the button,
+     *          wrapped in an array.
+     */
     public int[] values() {
         return new int[] {X_COORD, Y_COORD};
     }
 
+    
+    /** Switches play to true if its false, otherwise sets it to true.
+     * Starts/stops playback accordingly.
+     * 
+     * @param pointer       Pointer object associated with the current session
+     * @param audioTrack    AudioManager object associated with the current session
+     */
     private void togglePlay(Pointer pointer, AudioManager audioTrack) {
         pointer.togglePlay();
         play = !play;
@@ -33,15 +46,31 @@ public class PlayButton extends Button {
         }
     }
 
+    
+    /** Stops audio playback
+     * 
+     * @param audioTrack    AudioManager object associated with the current session
+     */
     public void stop(AudioManager audioTrack) {
         play = false;
         audioTrack.stopPlaying();
     }
 
+    
+    /** Handles clicks on this button
+     * Toggles between play and pause.
+     * 
+     * @param pointer       Pointer object associated with the current session
+     * @param audioTrack    AudioManager object associated with the current session
+     */
     public void tick(Pointer pointer, AudioManager audioTrack) {
         this.togglePlay(pointer, audioTrack);
     }
 
+    
+    /** 
+     * @param app
+     */
     public void render(PApplet app) {
         app.image(img, X_COORD, Y_COORD);
         app.noStroke();

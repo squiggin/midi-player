@@ -24,19 +24,30 @@ public class LoadButton extends Button {
         this.imgFront = imgFront;
     }
 
+    
+    /**
+     * 
+     * @return  The x coordinate and y coordinate associated with the button,
+     *          wrapped in an array.
+     */
     @Override
     public int[] values() {
         return new int[] { X_COORD, Y_COORD };
     }
 
+    
+    /** Load sequence from the savedata.sav file in the root project directory
+     * 
+     * @param instManager   InstrumentManager object associated with the current session
+     * @param grid          Grid object associated with the current session
+     */
     public void tick(InstrumentManager instManager, Grid grid) {
-        System.out.println("load");
         try {
             // Getting the instrument byte
             FileInputStream loadStream = new FileInputStream("savedata.sav");
             int readByte = loadStream.read();
             if (readByte > 3 || readByte < 0) {
-                System.out.println("Bad file" + " instrument");
+                System.out.println("Bad file");
                 loadStream.close();
                 return;
             }
@@ -47,7 +58,7 @@ public class LoadButton extends Button {
             HashMap<Integer, List<Integer>> blockKeys = new HashMap<>();
             while ((readByte = loadStream.read()) != -1) {
                 if (readByte < 0 || readByte > 31) {
-                    System.out.println("Bad file"+" tick");
+                    System.out.println("Bad file");
                     loadStream.close();
                     return;
                 }
@@ -55,7 +66,7 @@ public class LoadButton extends Button {
                 blockKeys.put(tick, new ArrayList<Integer>());
                 readByte = loadStream.read();
                 if(readByte < 0 || readByte > 12) {
-                    System.out.println("Bad file"+" size "+readByte);
+                    System.out.println("Bad file");
                     loadStream.close();
                     return;
                 }
@@ -63,7 +74,7 @@ public class LoadButton extends Button {
                 for (int i = 0; i < size; i++) {
                     readByte = loadStream.read();
                     if (readByte < 0 || readByte > 12) {
-                        System.out.println("Bad file"+" note");
+                        System.out.println("Bad file");
                         loadStream.close();
                         return;
                     }
@@ -89,6 +100,10 @@ public class LoadButton extends Button {
         }
     }
 
+    
+    /** Draws button image on the PApplet object
+     * @param app
+     */
     public void render(PApplet app) {
         app.image(imgBack, X_COORD, Y_COORD);
         app.image(imgFront, X_COORD, Y_COORD);

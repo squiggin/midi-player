@@ -9,7 +9,11 @@ import piano.Buttons.ResetButton;
 import piano.Buttons.SaveButton;
 import piano.Buttons.StopButton;
 
+/** SessionManager class. Sets everything up and calls upon every component 
+ *  during the loop.
+ */
 public class SessionManager {
+    /** App object. */
     App app;
 
     private PlayButton play;
@@ -25,11 +29,16 @@ public class SessionManager {
     private AudioManager audioTrack;
     private InstrumentManager instManager;
 
+    /**
+     * 
+     * @param app   The App object that this session will run on.
+     */
     SessionManager(App app) {
         this.app = app;
         audioTrack = new AudioManager();
     }
 
+    /** Setup method to initialize every object and component. */
     void setup() {
         
         play = new PlayButton(app.images[Asset.ButtonBack.get()]);
@@ -65,14 +74,15 @@ public class SessionManager {
         app.image(app.images[Asset.Keyboard.get()], 0, 75);
     }
 
-    /**
+    /** Method to check whether the given mouse coordinates lie within range
+     *  of the given Button object.
      * 
-     * @param button
-     * @param sizeX
-     * @param sizeY
-     * @param mouseX
-     * @param mouseY
-     * @return
+     * @param button    The button object to be checked
+     * @param sizeX     The width of the button
+     * @param sizeY     The height of the button
+     * @param mouseX    The mouse x coordinate
+     * @param mouseY    The mouse y coordinate
+     * @return boolean  true if the button is clicked, false otherwise
      */
     private boolean isButtonClicked(Button button, int sizeX, int sizeY, int mouseX, int mouseY) {
         return(mouseX >= button.X_COORD &&
@@ -81,10 +91,24 @@ public class SessionManager {
         mouseY <= button.Y_COORD + sizeY);
     }
 
+    
+    /** isButtonClicked for square shaped buttons
+     * 
+     * @param button    The button object to be checked
+     * @param size     The side length of the button
+     * @param mouseX    The mouse x coordinate
+     * @param mouseY    The mouse y coordinate
+     * @return boolean  true if the button is clicked, false otherwise
+     */
     private boolean isButtonClicked(Button button, int size, int mouseX, int mouseY) {
         return isButtonClicked(button, size, size, mouseX, mouseY);
     }
 
+    
+    /** Handles mouse clicks.
+     * @param mouseX    The mouse x coordinate
+     * @param mouseY    The mouse y coordinate
+     */
     public void clickHandler(int mouseX, int mouseY) {
         
         if(isButtonClicked(play, 40, mouseX, mouseY)) {
@@ -109,6 +133,7 @@ public class SessionManager {
         }
     }
 
+    /** Makes all components draw themselves on the PApplet object */
     public void render() {
         grid.render(app);
         app.image(app.images[Asset.MidBanner.get()], 0, 0);
@@ -126,46 +151,90 @@ public class SessionManager {
         audioTrack.run(app);
     }
 
+    
+    /** 
+     * @return InstrumentNext   Next Instrument button object
+     */
     public InstrumentNext getNextInst() {
         return nextInst;
     }
 
+    
+    /** 
+     * @return InstrumentPrev   Previous Instrument button object
+     */
     public InstrumentPrev getPrevInst() {
         return prevInst;
     }
 
+    
+    /** 
+     * @return PlayButton
+     */
     public PlayButton getPlay() {
         return play;
     }
 
+    
+    /** 
+     * @return StopButton
+     */
     public StopButton getStop() {
         return stop;
     }
 
+    
+    /** 
+     * @return MidiWrite    Midi Export button object
+     */
     public MidiWrite getWrite() {
         return write;
     }
 
+    
+    /** 
+     * @return ResetButton
+     */
     public ResetButton getReset() {
         return reset;
     }
 
+    
+    /** 
+     * @return SaveButton
+     */
     public SaveButton getSave() {
         return save;
     }
 
+    
+    /** 
+     * @return LoadButton
+     */
     public LoadButton getLoad() {
         return load;
     }
 
+    
+    /** 
+     * @return Grid
+     */
     public Grid getGrid() {
         return grid;
     }
 
+    
+    /** 
+     * @return AudioManager
+     */
     public AudioManager getAudioTrack() {
         return audioTrack;
     }
 
+    
+    /** 
+     * @return InstrumentManager
+     */
     public InstrumentManager getInstManager() {
         return instManager;
     }

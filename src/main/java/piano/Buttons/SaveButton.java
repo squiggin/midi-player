@@ -24,8 +24,10 @@ public class SaveButton extends Button {
     }
 
     
-    /** 
-     * @return int[]
+    /**
+     * 
+     * @return  The x coordinate and y coordinate associated with the button,
+     *          wrapped in an array.
      */
     @Override
     public int[] values() {
@@ -33,13 +35,13 @@ public class SaveButton extends Button {
     }
 
     
-    /** 
-     * @param audioTrack
-     * @param instManager
-     * @param grid
+    /** Saves current sequence and instrument to the savedata.sav file in the project root directory
+     * 
+     * @param audioTrack    AudioManager object associated with the current session
+     * @param instManager   InstrumentManager object associated with the current session
+     * @param grid          Grid object associated with the current session
      */
     public void tick(AudioManager audioTrack, InstrumentManager instManager, Grid grid) {
-        System.out.println("save");
         File saveFile = new File("savedata.sav");
         try {
             FileOutputStream saveStream = new FileOutputStream(saveFile);
@@ -58,7 +60,9 @@ public class SaveButton extends Button {
         
     }
 
-    /** */
+    /** Draws button image on the PApplet object
+     * @param app
+     */
     public void render(PApplet app) {
         app.image(imgBack, X_COORD, Y_COORD);
         app.image(imgFront, X_COORD, Y_COORD);

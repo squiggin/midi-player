@@ -9,7 +9,6 @@ import javax.sound.midi.MidiChannel;
 import javax.sound.midi.MidiEvent;
 import javax.sound.midi.MidiSystem;
 import javax.sound.midi.Sequence;
-import javax.sound.midi.Sequencer;
 import javax.sound.midi.ShortMessage;
 import javax.sound.midi.Synthesizer;
 import javax.sound.midi.Track;
@@ -17,8 +16,8 @@ import javax.sound.midi.Track;
 import processing.core.PApplet;
 import processing.core.PImage;
 
+/** AudioManager class for managing the sequence, synthesizer and all playback related stuff. */
 public class AudioManager {
-    private Sequencer sequencer;
     private Sequence sequence;
     private Synthesizer synth;
     private MidiChannel channel;
@@ -32,19 +31,18 @@ public class AudioManager {
     private boolean isPlaying;
     private List<Integer> currentlyActive;
 
+    /**
+     * Constructor for AudioManager.
+     * Sets up the synthesizer, playback channel and other variables.
+     */
     public AudioManager() {
         try {
             synth = MidiSystem.getSynthesizer();
             synth.open();
             channel = synth.getChannels()[0];
 
-            sequencer = MidiSystem.getSequencer();
-            sequencer.open();
-
             sequence = new Sequence(Sequence.PPQ, 4);
-            sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
-            sequencer.setSequence(sequence);
             setTempoTo120BPM();
             currentInstrumentEvent = null;
 
@@ -76,18 +74,37 @@ public class AudioManager {
         }
     }
 
+    
+    /** Setup method. Initializes and returns an InstrumentManager object. 
+     * Updates current instrument too.  
+     * 
+     * @param imgBack   Image for the button background.
+     * @param bFront    Image for the banjo button front.
+     * @param pFront    Image for the piano button front.
+     * @param mFront    Image for the marimba button front.
+     * @param sFront    Image for the saxophone button front.
+     * @return InstrumentManager object.
+     */
     public InstrumentManager setup(PImage imgBack, PImage bFront, PImage pFront, PImage mFront, PImage sFront) {
         instrumentManager = new InstrumentManager(this, synth, imgBack, bFront, pFront, mFront, sFront);
         updateInstrument();
         return instrumentManager;
     }
 
+    /**
+     * Gets the current instrument from the instrument manager and updates itself.
+     */
     public void updateInstrument() {
         Instrument current = instrumentManager.getInstrument();
         setInstrument(current);
     }
 
-    public void setInstrument(Instrument current) {
+    
+    /** Sets the Instrument provided as the argument to the instrument of the sequence\
+     *  and the channel.
+     * @param current   The instrument to be set to the current instrument.
+     */
+    private void setInstrument(Instrument current) {
         if (currentInstrumentEvent != null) {
             track.remove(currentInstrumentEvent);
         }
@@ -125,18 +142,25 @@ public class AudioManager {
 		}
     }
 
+    /** Empties the sequence. */
     public void clear() {
         try {
             sequence = new Sequence(Sequence.PPQ, 4);
-            sequencer.setTempoInBPM(120);
             track = sequence.createTrack();
-            sequencer.setSequence(sequence);
             isPlaying = false;
         } catch(Exception e) {
             e.printStackTrace();
         }
     }
-
+    
+    /** Adds a note of length 2 ticks corresponding to the given note number to the 
+     *  sequence at the given tick.
+     *  Returns the noteOn and noteOff events that were added, wrapped in an array. 
+     *  
+     * @param noteNumber    Note number of note to be added
+     * @param tick          Tick position at which the note is to be added.
+     * @return MidiEvent[]  The noteOn and noteOff events that were added, wrapped in an array
+     */
     public MidiEvent[] addNote(int noteNumber, int tick) {
         MidiEvent event1 = null;
         MidiEvent event2 = null;
@@ -154,21 +178,33 @@ public class AudioManager {
         return new MidiEvent[] {event1, event2};
     }
 
+    
+    /** Removes the events given as arguments from the sequence. 
+     * 
+     * @param event     The noteOn and noteOff events to be removes, wrapped in an array
+     */
     public void removeNote(MidiEvent[] event) {
         track.remove(event[0]);
         track.remove(event[1]);
     }
 
+    /** Sets isPlaying to true. */
     public void startPlaying() {
         isPlaying = true;
     }
 
+    /** Stops all playing notes. Sets isPlaying to false. */
     public void stopPlaying() {
         this.currentTick = -1;
         channel.allNotesOff();
         isPlaying = false;
     }
 
+    
+    /** Renders the instrument button. Plays notes if isPlaying is true. 
+     * 
+     * @param app   PApplet object
+     */
     public void run(PApplet app) {
         instrumentManager.render(app);
         if (isPlaying) {
@@ -189,23 +225,44 @@ public class AudioManager {
         }
     }
 
+    /** Sets isPlaying to true and reinitializes tick position to -1. */
     public void reset() {
         isPlaying = true;
         this.currentTick = -1;
     }
 
+    
+    /** Getter for the current Sequence.
+     * 
+     * @return The current Sequence.
+     */
     public Sequence getSequence() {
         return sequence;
     }
 
-    public void setGrid(Grid grid) {
+    
+    /** Sets grid to the Grid object given as an argument.
+     * 
+     * @param grid  The Grid object to set grid to.
+     */
+    void setGrid(Grid grid) {
         this.grid = grid;
     }
 
+    
+    /** Sets pointer to the Pointer object given as an argument.
+     * 
+     * @param pointer   The Pointer object to set pointer to.
+     */
     public void setPointer(Pointer pointer) {
         this.pointer = pointer;
     }
 
+    
+    /** Getter for isPlaying.
+     * 
+     * @return boolean Whether sound playback is on or not.
+     */
     public boolean isPlaying() {
         return isPlaying;
     }

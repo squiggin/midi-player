@@ -20,10 +20,16 @@ public class MidiWrite extends Button {
         this.audioTrack = audioTrack;
     }
     
+    /**
+     * 
+     * @return  The x coordinate and y coordinate associated with the button,
+     *          wrapped in an array.
+     */
     public int[] values() {
         return new int[] {X_COORD, Y_COORD};
     }
 
+    /** Writes the current sequence to the Out.midi file in the project root directory. */
     public void tick() {
         File midiFile = new File("Out.midi");
         System.out.println(midiFile.getAbsolutePath());
@@ -36,6 +42,10 @@ public class MidiWrite extends Button {
         }
     }
 
+    
+    /** Draws button image on the PApplet object
+     * @param app
+     */
     public void render(PApplet app) {
         app.noStroke();
         app.fill(130, 130, 200);

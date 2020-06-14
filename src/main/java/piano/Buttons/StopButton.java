@@ -16,16 +16,32 @@ public class StopButton extends Button {
         this.img = img;
     }
 
+    /**
+     * 
+     * @return  The x coordinate and y coordinate associated with the button,
+     *          wrapped in an array.
+     */
     public int[] values() {
         return new int[] {X_COORD, Y_COORD};
     }
 
+    
+    /** Stops playback and resets pointer to start.
+     * 
+     * @param pointer       Pointer object associated with the current session
+     * @param playButton    Play button associated with the current session
+     * @param audioTrack    AudioManager object associated with the current session
+     */
     public void tick(Pointer pointer, PlayButton playButton, AudioManager audioTrack) {
         pointer.stop();
         audioTrack.reset();
         playButton.stop(audioTrack);
     }
 
+    
+    /** Draws button image on the PApplet object
+     * @param app
+     */
     public void render(PApplet app) {
         app.image(img, X_COORD, Y_COORD);
         app.noStroke();

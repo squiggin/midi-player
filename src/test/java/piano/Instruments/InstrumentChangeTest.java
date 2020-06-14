@@ -41,9 +41,10 @@ public class InstrumentChangeTest {
             next.tick();
             current += 1;
         }
-        
+
+        // Wraps around
         assertNotEquals(current, instManager.getCurrentIndex());
-        assertEquals(3, instManager.getCurrentIndex());
+        assertEquals(0, instManager.getCurrentIndex());
 
         // Now for prev
         current = instManager.getCurrentIndex();
@@ -55,13 +56,12 @@ public class InstrumentChangeTest {
         }
         
         assertNotEquals(current, instManager.getCurrentIndex());
-        assertEquals(0, instManager.getCurrentIndex());
+        assertEquals(3, instManager.getCurrentIndex());
 
         // And a bit of both
-        current = instManager.getCurrentIndex();
         next.tick();
-        prev.tick();
-        assertEquals(instManager.getCurrentIndex(), current);
+        current = instManager.getCurrentIndex();
+        // Back to 0
 
         next.tick();
         next.tick();

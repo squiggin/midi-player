@@ -1,5 +1,6 @@
 package piano;
 
+/** Enum Asset mapping the images names to their filenames and array indices. */
 public enum Asset {
     Banner(0, "banner.png"),
     Block(1, "block.png"),
@@ -24,15 +25,28 @@ public enum Asset {
     private String file;
     private int index;
 
+    /**
+     * 
+     * @param index The array index that the Asset maps to. 
+     * @param file The name of the file the Asset maps to.
+     */
     Asset(int index, String file) {
         this.index = index;
         this.file = file;
     }
 
+    /**
+     * Getter for the path to the image file that the Asset maps to.
+     * @return Path to image file that the Asset maps to.
+     */
     public String getPath() {
         return "src/main/resources/" + this.file;
     }
 
+    /**
+     * Getter for the array index that the Asset maps to.
+     * @return Array index that the Asset maps to.
+     */
     public int get() {
         return this.index;
     }
